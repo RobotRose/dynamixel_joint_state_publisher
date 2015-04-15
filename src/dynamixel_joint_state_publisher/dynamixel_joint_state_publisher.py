@@ -44,22 +44,23 @@ class JointStatePublisher():
         rate = rospy.get_param('~rate', 20)
         r = rospy.Rate(rate)
         
-        self.joints = rospy.get_param('~joints', '')
+        joint_controllers = rospy.get_param('~joint_controllers', '')
 
-        if self.joints:
-            rospy.loginfo("Joints: {0}".format(self.joints))
+        if joint_controllers:
+            rospy.loginfo("Joints: {0}".format(joint_controllers))
         else:
-            rospy.logfatal("No joints configured")
+            rospy.logfatal("No joint controllers configured")
             exit(1)
                                                                 
         self.servos = list()
         self.controllers = list()
         self.joint_states = dict({})
         
-        for controller in sorted(self.joints):
-            self.joint_states[controller] = JointStateMessage(controller, 0.0, 0.0, 0.0)
-            self.controllers.append(controller)
-                           
+        for joint_controller in sorted(joint_controllers):
+            joint_name = rospy.get_param("/"+joint_controller+'/joint_name', '')
+            self.joint_states[joint_name] = JointStateMessage(joint_name, 0.0, 0.0, 0.0)
+            self.controllers.append(joint_controller)
+
         # Start controller state subscribers
         [rospy.Subscriber(c + '/state', JointStateDynamixel, self.controller_state_handler) for c in self.controllers]
      
@@ -89,7 +90,7 @@ class JointStatePublisher():
             msg.position.append(joint.position)
             msg.velocity.append(joint.velocity)
             msg.effort.append(joint.effort)
-           
+        
         msg.header.stamp = rospy.Time.now()
         msg.header.frame_id = 'base_link'
         self.joint_states_pub.publish(msg)
