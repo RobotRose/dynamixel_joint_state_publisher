@@ -44,10 +44,13 @@ class JointStatePublisher():
         rate = rospy.get_param('~rate', 20)
         r = rospy.Rate(rate)
         
-        # The namespace and joints parameter needs to be set by the servo controller
-        # (The namespace is usually null.)
-        namespace = rospy.get_namespace()
-        self.joints = rospy.get_param(namespace + '/joints', '')
+        self.joints = rospy.get_param('~joints', '')
+
+        if self.joints:
+            rospy.loginfo("Joints: {0}".format(self.joints))
+        else:
+            rospy.logfatal("No joints configured")
+            exit(1)
                                                                 
         self.servos = list()
         self.controllers = list()
