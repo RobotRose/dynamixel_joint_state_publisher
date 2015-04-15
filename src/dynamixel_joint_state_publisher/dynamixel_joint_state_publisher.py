@@ -49,7 +49,7 @@ class JointStatePublisher():
         if joint_controllers:
             rospy.loginfo("Joints: {0}".format(joint_controllers))
         else:
-            rospy.logfatal("No joint controllers configured")
+            rospy.logfatal("No joint controllers configured. This node needs to have rosparam ~joint_controllers be set to a list of dynamixel joint controllers. Please see dynamixel_joint_state_publisher/launch/example.launch")
             exit(1)
                                                                 
         self.servos = list()
