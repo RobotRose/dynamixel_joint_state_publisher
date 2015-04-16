@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>    
+    <!-- Start the Dynamixel Joint States Publisher -->
+    <node name="dynamixel_joint_states_publisher" pkg="dynamixel_joint_state_publisher" type="dynamixel_joint_state_publisher.py" output="screen">
+        <!--Dynamixel controller_spawner (pkg="dynamixel_controllers" type="controller_spawner.py") sets the jointnames that each controller operates. That is the entry point for the complete configuration -->
+        <rosparam>
+            joint_controllers: ['neck_pan_controller', 'neck_tilt_controller']
+       </rosparam>
+   </node>
+</launch>
